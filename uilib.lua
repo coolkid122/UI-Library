@@ -1,7 +1,3 @@
--- uilib.lua | Hiklo's Aura UI Library
--- Clean, lightweight, lowercase functions, dark theme
--- Usage: local uilib = loadstring(game:HttpGet("RAW_GITHUB_URL"))() or inline it
-
 local uilib = {}
 
 local players = game:GetService("Players")
@@ -11,7 +7,6 @@ screengui.Name = "HikloAuraUI"
 screengui.Parent = me:WaitForChild("PlayerGui")
 screengui.ResetOnSpawn = false
 
--- createwindow(title: string) -> frame
 function uilib.createwindow(title)
 	local frame = Instance.new("Frame")
 	frame.Size = UDim2.new(0, 220, 0, 180)
@@ -23,10 +18,7 @@ function uilib.createwindow(title)
 	frame.Parent = screengui
 
 	local grad = Instance.new("UIGradient")
-	grad.Color = ColorSequence.new{
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 35, 50)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
-	}
+	grad.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 35, 50)), ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))}
 	grad.Rotation = 90
 	grad.Parent = frame
 
@@ -55,7 +47,6 @@ function uilib.createwindow(title)
 	return frame
 end
 
--- title(parent: frame, text: string)
 function uilib.title(parent, text)
 	local label = Instance.new("TextLabel")
 	label.Size = UDim2.new(1, 0, 0, 30)
@@ -68,7 +59,6 @@ function uilib.title(parent, text)
 	return label
 end
 
--- button(parent: frame, posY: number, text: string, callback: function) -> btn, grad, stroke
 function uilib.button(parent, posy, text, callback)
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0.9, 0, 0, 35)
@@ -90,10 +80,7 @@ function uilib.button(parent, posy, text, callback)
 	stroke.Parent = btn
 
 	local grad = Instance.new("UIGradient")
-	grad.Color = ColorSequence.new{
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(240, 80, 80)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 40, 40))
-	}
+	grad.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(240, 80, 80)), ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 40, 40))}
 	grad.Rotation = 45
 	grad.Parent = btn
 
@@ -102,47 +89,27 @@ function uilib.button(parent, posy, text, callback)
 	return btn, grad, stroke
 end
 
--- toggle(parent: frame, posY: number, text: string, default: boolean, callback: function(state)) -> btn, grad, stroke
 function uilib.toggle(parent, posy, text, default, callback)
 	local state = default or false
-	local fulltext = text .. ": " .. (state and "ON" or "OFF")
-
-	local btn, grad, stroke = uilib.button(parent, posy, fulltext, function()
+	local btn, grad, stroke = uilib.button(parent, posy, text .. ": " .. (state and "ON" or "OFF"), function()
 		state = not state
 		btn.Text = text .. ": " .. (state and "ON" or "OFF")
-		if state then
-			grad.Color = ColorSequence.new{
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 255, 80)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 200, 40))
-			}
-			stroke.Color = Color3.fromRGB(20, 140, 20)
-		else
-			grad.Color = ColorSequence.new{
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(240, 80, 80)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 40, 40))
-			}
-			stroke.Color = Color3.fromRGB(140, 40, 40)
-		end
+		grad.Color = state and ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 255, 80)), ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 200, 40))} or ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(240, 80, 80)), ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 40, 40))}
+		stroke.Color = state and Color3.fromRGB(20, 140, 20) or Color3.fromRGB(140, 40, 40)
 		if callback then callback(state) end
 	end)
-
 	if state then
-		grad.Color = ColorSequence.new{
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 255, 80)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 200, 40))
-		}
+		grad.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 255, 80)), ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 200, 40))}
 		stroke.Color = Color3.fromRGB(20, 140, 20)
 	end
-
 	return btn, grad, stroke, function(newstate)
-		if newstate == nil then return state end
-		if newstate ~= state then
+		if newstate ~= nil and newstate ~= state then
 			btn.MouseButton1Click:Fire()
 		end
+		return state
 	end
 end
 
--- label(parent: frame, posY: number, text: string)
 function uilib.label(parent, posy, text)
 	local label = Instance.new("TextLabel")
 	label.Size = UDim2.new(0.9, 0, 0, 25)
@@ -157,7 +124,6 @@ function uilib.label(parent, posy, text)
 	return label
 end
 
--- slider(parent: frame, posY: number, text: string, min: number, max: number, default: number, callback: function(value))
 function uilib.slider(parent, posy, text, minval, maxval, default, callback)
 	local frame = Instance.new("Frame")
 	frame.Size = UDim2.new(0.9, 0, 0, 50)
